@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #ff4500;
+}
+
+#menu-container, #cart-container, #menu-admin-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+    color: #ff4500;
+    text-decoration: none;
+    font-weight: bold;
+}
+
