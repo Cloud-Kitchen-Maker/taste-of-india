@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 // Endpoint to handle orders
 app.post("/place-order", (req, res) => {
   const { orderDetails } = req.body;
-  const emailRecipients = ["9731340538@gmail.com", "9731340860@gmail.com"]; // Replace with real email addresses
+  const emailRecipients = ["mustaq.md261984@gmail.com", "salmathw.21@gmail.com"]; // Replace with real email addresses
 
   emailRecipients.forEach((recipient) => {
     const mailOptions = {
