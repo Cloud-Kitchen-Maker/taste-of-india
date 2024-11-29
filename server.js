@@ -1,35 +1,42 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fs = require('fs');
+const express = require("express");
+const nodemailer = require("nodemailer");
+
 const app = express();
-const PORT = 3000;
+app.use(express.json());
 
-app.use(bodyParser.json());
-app.use(express.static('public'));
-
-const menuFile = './menu.json';
-
-app.get('/menu', (req, res) => {
-    fs.readFile(menuFile, 'utf8', (err, data) => {
-        if (err) return res.status(500).send('Error loading menu.');
-        res.json(JSON.parse(data));
-    });
+// Email Notification Config
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "your-email@gmail.com",
+    pass: "your-email-password",
+  },
 });
 
-app.post('/menu', (req, res) => {
-    const { item } = req.body;
-    fs.readFile(menuFile, 'utf8', (err, data) => {
-        if (err) return res.status(500).send('Error loading menu.');
-        const menu = JSON.parse(data);
-        const existingIndex = menu.findIndex(d => d.name === item.name);
-        if (existingIndex >= 0) menu[existingIndex] = item;
-        else menu.push(item);
-        fs.writeFile(menuFile, JSON.stringify(menu, null, 2), err => {
-            if (err) return res.status(500).send('Error updating menu.');
-            res.status(200).send('Menu updated.');
-        });
+// Endpoint to handle orders
+app.post("/place-order", (req, res) => {
+  const { orderDetails } = req.body;
+  const emailRecipients = ["9731340538@gmail.com", "9731340860@gmail.com"]; // Replace with real email addresses
+
+  emailRecipients.forEach((recipient) => {
+    const mailOptions = {
+      from: "your-email@gmail.com",
+      to: recipient,
+      subject: "New Order Received",
+      text: `Order Details:\n\n${orderDetails}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(`Failed to send email to ${recipient}:`, error);
+      } else {
+        console.log(`Email sent to ${recipient}:`, info.response);
+      }
     });
+  });
+
+  res.status(200).send("Order placed successfully!");
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
